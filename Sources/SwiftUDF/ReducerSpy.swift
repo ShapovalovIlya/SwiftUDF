@@ -7,11 +7,11 @@
 
 import Foundation
 import Combine
-import XCTest
+// import XCTest
 
 final class ReducerSpy<A: Equatable> {
     private var cancellable: Set<AnyCancellable> = .init()
-    let exp = XCTestExpectation(description: "ReducerSpy")
+//    let exp = XCTestExpectation(description: "ReducerSpy")
     private(set) var actions: [A] = .init()
     
     init() { }
@@ -19,7 +19,7 @@ final class ReducerSpy<A: Equatable> {
     func schedule(_ publishers: AnyPublisher<A, Never>...) {
         Publishers.MergeMany(publishers)
             .sink { _ in
-                self.exp.fulfill()
+    //            self.exp.fulfill()
             } receiveValue: { action in
                 self.actions.append(action)
             }
