@@ -16,7 +16,7 @@ public final class ReducerSpy<A: Equatable> {
     
     public init() { }
     
-    func schedule(_ publishers: AnyPublisher<A, Never>...) {
+    public func schedule(_ publishers: AnyPublisher<A, Never>...) {
         Publishers.MergeMany(publishers)
             .sink { _ in
     //            self.exp.fulfill()
