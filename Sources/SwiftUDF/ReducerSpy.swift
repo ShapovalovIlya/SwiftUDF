@@ -9,10 +9,10 @@ import Foundation
 import Combine
 // import XCTest
 
-final class ReducerSpy<A: Equatable> {
+public final class ReducerSpy<A: Equatable> {
     private var cancellable: Set<AnyCancellable> = .init()
 //    let exp = XCTestExpectation(description: "ReducerSpy")
-    private(set) var actions: [A] = .init()
+    public private(set) var actions: [A] = .init()
     
     init() { }
     
