@@ -7,7 +7,7 @@ let package = Package(
     name: "SwiftUDF",
     platforms: [
         .macOS(.v11),
-        .iOS(.v13)
+        .iOS(.v14)
     ],
     products: [
         .library(name: "SwiftUDF", targets: ["SwiftUDF"]),
