@@ -5,17 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftUDF",
+    platforms: [
+        .macOS(.v11),
+        .iOS(.v13)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "SwiftUDF",
-            targets: ["SwiftUDF"]),
+        .library(name: "SwiftUDF", targets: ["SwiftUDF"]),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "SwiftUDF"),
+        .target(name: "SwiftUDF"),
         .testTarget(
             name: "SwiftUDFTests",
             dependencies: ["SwiftUDF"]),
