@@ -14,7 +14,7 @@ public final class ReducerSpy<A: Equatable> {
 //    let exp = XCTestExpectation(description: "ReducerSpy")
     public private(set) var actions: [A] = .init()
     
-    init() { }
+    public init() { }
     
     func schedule(_ publishers: AnyPublisher<A, Never>...) {
         Publishers.MergeMany(publishers)
