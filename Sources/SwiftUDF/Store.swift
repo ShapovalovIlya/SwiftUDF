@@ -33,7 +33,7 @@ public final class Store<State, Action>: ObservableObject {
         }
         
         $state
-            .map { String(describing: $0) }
+            .map(String.init(describing:))
             .sink { logger.debug("\($0)") }
             .store(in: &cancellable)
     }
