@@ -32,7 +32,10 @@ public final class Store<State, Action>: ObservableObject {
             return
         }
         
-        
+        $state
+            .map { String(describing: $0) }
+            .sink { logger.debug("\($0)") }
+            .store(in: &cancellable)
     }
     
     //MARK: - Public methods
@@ -51,10 +54,6 @@ public final class Store<State, Action>: ObservableObject {
     public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
         state[keyPath: keyPath]
     }
-}
-
-private extension Store {
-    
 }
 
 extension Store {
