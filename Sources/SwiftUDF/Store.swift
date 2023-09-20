@@ -51,6 +51,7 @@ public final class Store<State, Action>: ObservableObject {
         cancellable.removeAll()
     }
     
+    //MARK: - Subscript
     public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
         state[keyPath: keyPath]
     }
