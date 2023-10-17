@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "injected",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ShapovalovIlya/Injected.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9dfdcb2b580d5dc6746e50ba59a1fc2229778e9b"
+      }
+    }
+  ],
+  "version" : 2
+}

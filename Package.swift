@@ -12,10 +12,34 @@ let package = Package(
     products: [
         .library(name: "SwiftUDF", targets: ["SwiftUDF"]),
     ],
+    dependencies: [
+        Dependencies.Injected.package,
+    ],
     targets: [
-        .target(name: "SwiftUDF"),
+        .target(
+            name: "SwiftUDF",
+            dependencies: [
+                Dependencies.Injected.product
+            ]),
         .testTarget(
             name: "SwiftUDFTests",
             dependencies: ["SwiftUDF"]),
     ]
 )
+
+//MARK: - Dependencies
+fileprivate enum Dependencies {
+    case Injected
+    
+    var package: Package.Dependency {
+        switch self {
+        case .Injected: .package(url: "https://github.com/ShapovalovIlya/Injected.git", branch: "main")
+        }
+    }
+    
+    var product: Target.Dependency {
+        switch self {
+        case .Injected: .product(name: "Injected", package: "Injected")
+        }
+    }
+}

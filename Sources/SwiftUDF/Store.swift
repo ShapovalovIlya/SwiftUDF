@@ -13,11 +13,12 @@ public typealias StoreOf<R: ReducerDomain> = Store<R.State, R.Action>
 
 @dynamicMemberLookup
 public final class Store<State, Action>: ObservableObject {
-    private let reducer: any ReducerDomain<State, Action>
-    private var cancellable: Set<AnyCancellable> = .init()
-    private var logger: Logger?
+    @usableFromInline let reducer: any ReducerDomain<State, Action>
+    @usableFromInline var cancellable: Set<AnyCancellable> = .init()
+    @usableFromInline var logger: Logger?
     
-    @Published public private(set) var state: State
+    public let state: PassthroughSubject<State, Never> = .init()
+    @Published @usableFromInline var _state: State
     
     //MARK: - init(_:)
     public init<R: ReducerDomain>(
@@ -25,35 +26,41 @@ public final class Store<State, Action>: ObservableObject {
         reducer: R,
         logger: Logger? = nil
     ) where R.State == State, R.Action == Action {
-        self.state = state
+        self._state = state
         self.reducer = reducer
         
         guard let logger = logger else {
             return
         }
         
-        $state
+        self.$_state
+            .sink(receiveValue: self.state.send)
+            .store(in: &cancellable)
+        
+        self.state
             .map(String.init(describing:))
             .sink { logger.debug("\($0)") }
             .store(in: &cancellable)
     }
     
     //MARK: - Public methods
+    @inlinable
     public func send(_ action: Action) {
         logger?.debug("\(String(describing: action))")
-        reducer.reduce(&state, action: action)
+        reducer.reduce(&_state, action: action)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: send)
             .store(in: &cancellable)
     }
     
+    @inlinable
     public func dispose() {
         cancellable.removeAll()
     }
     
     //MARK: - Subscript
     public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
-        state[keyPath: keyPath]
+        _state[keyPath: keyPath]
     }
 }
 
