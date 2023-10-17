@@ -17,8 +17,7 @@ public final class Store<State, Action>: ObservableObject {
     @usableFromInline var cancellable: Set<AnyCancellable> = .init()
     @usableFromInline var logger: Logger?
     
-    public let state: PassthroughSubject<State, Never> = .init()
-    @Published @usableFromInline var _state: State
+    @Published public private(set) var state: State
     
     //MARK: - init(_:)
     public init<R: ReducerDomain>(
@@ -26,28 +25,23 @@ public final class Store<State, Action>: ObservableObject {
         reducer: R,
         logger: Logger? = nil
     ) where R.State == State, R.Action == Action {
-        self._state = state
+        self.state = state
         self.reducer = reducer
         
         guard let logger = logger else {
             return
         }
-        
-        self.$_state
-            .sink(receiveValue: self.state.send)
-            .store(in: &cancellable)
-        
-        self.state
+           
+        self.$state
             .map(String.init(describing:))
             .sink { logger.debug("\($0)") }
             .store(in: &cancellable)
     }
     
     //MARK: - Public methods
-    @inlinable
     public func send(_ action: Action) {
         logger?.debug("\(String(describing: action))")
-        reducer.reduce(&_state, action: action)
+        reducer.reduce(&state, action: action)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: send)
             .store(in: &cancellable)
@@ -59,8 +53,9 @@ public final class Store<State, Action>: ObservableObject {
     }
     
     //MARK: - Subscript
+    @inlinable
     public subscript<T>(dynamicMember keyPath: KeyPath<State, T>) -> T {
-        _state[keyPath: keyPath]
+        state[keyPath: keyPath]
     }
 }
 
